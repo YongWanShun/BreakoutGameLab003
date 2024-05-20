@@ -10,7 +10,7 @@ namespace BreakoutGameLab001
     internal class BrickGamePanel : Panel
     {
         // 定義遊戲元件
-        private Ball ball;
+        private List<Ball> balls = new List<Ball>();
         private Paddle paddle;
         private Brick[,] bricks;
         // 定義 Timer 控制項
@@ -26,7 +26,10 @@ namespace BreakoutGameLab001
         public void Initialize() { 
             // 初始化遊戲元件
             //
-            ball = new Ball( Width / 2, Height / 2, 15, 3, -3, Color.Red );
+            balls.Add ( new Ball( Width / 2, Height / 2, 30, 3, -3, Color.Red ));
+            balls.Add ( new Ball(Width / 3, Height / 2, 15, -2, 3, Color.Green));
+            balls.Add(new Ball(Width / 2, Height / 3, 10, -3, 2, Color.Blue));
+            
             paddle = new Paddle(Width / 2 - 50, Height - 50, 120, 20, Color.Blue);
             //
             bricks = new Brick[3, 10];
@@ -37,7 +40,7 @@ namespace BreakoutGameLab001
                     bricks[i, j] = new Brick(25 + j * 80, 25 + this.Location.Y + i * 30, 80, 30, Color.Green);
                 }
             }
-
+            
             //
             // 設定遊戲的背景控制流程: 每 20 毫秒觸發一次 Timer_Tick 事件 ==> 更新遊戲畫面
             // 也可以利用 Thread 類別來實現 類似的功能!!
@@ -49,8 +52,13 @@ namespace BreakoutGameLab001
         private void Timer_Tick(object sender, EventArgs e)
         {
             // 定時移動球的位置, 檢查碰撞事件
-            // ball.Move( Width, Height);
-            // ball.CheckCollision(paddle, bricks);
+            foreach (Ball ball in balls)
+            {
+                ball.Move(0, 61, Width, Height);
+                ball.CheckCollision(paddle, bricks);
+            }
+            
+            
 
             // 重繪遊戲畫面
             Invalidate(); // --> 觸發 OnPaint 事件
@@ -66,17 +74,22 @@ namespace BreakoutGameLab001
             Graphics gr = e.Graphics;
 
             // 繪製球、擋板
-            // ball.Draw(gr);
-            // paddle.Draw(gr);
+            foreach (var ball in balls)
+            {
+                ball.Draw(gr);
+            }
+            
+            paddle.Draw(gr);
 
             // 繪製磚塊
+            
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
                     if (bricks[i, j] != null)
                     {
-                        // bricks[i, j].Draw(gr);
+                        bricks[i, j].Draw(gr);
                     }
                 }
             }
@@ -85,12 +98,12 @@ namespace BreakoutGameLab001
         //
         public void paddleMoveLeft()
         {
-            // paddle.MoveLeft();
+             paddle.Move(-15);
         }
 
         public void paddleMoveRight()
         {
-            // paddle.MoveRight();
+             paddle.Move(15);
         }
     }
 }

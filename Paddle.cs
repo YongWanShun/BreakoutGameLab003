@@ -25,5 +25,15 @@
         // 繪製擋板
 
         // TODO: 左右移動擋板
+        internal void Draw(Graphics gr)
+        {
+            gr.FillRectangle(new SolidBrush(Color.Blue), X, Y, Width, Height);
+        }
+
+        //
+        public void Move(int vx)
+        {
+            X += vx;
+        }
     }
 }

@@ -32,27 +32,42 @@ namespace BreakoutGameLab001
         // 加入其他方法
 
         // TODO - 繪製球
+        internal void Draw(Graphics gr)
+        {
+            gr.FillEllipse( new SolidBrush(this.Color), X-Radius, Y-Radius, Radius*2, Radius*2 );
+        }
 
         // 移動球
-        public void Move(int Width, int Height)
+        public void Move(int left, int top, int right, int bottom)
         {
             // TODO - 根據速度更新球的位置
-
+            X += VelocityX;
+            Y += VelocityY;
             //
             // 水平方向: 檢查球是否碰到牆壁
-            if (X - Radius <= 0)
+            if (X - Radius <= left)
             {
                 VelocityX = -VelocityX; // 球反彈
-                X = Radius; // 避免球超出邊界
+                X = left+Radius; // 避免球超出邊界
             }
-            else if (X + Radius >= Width)
+            else if (X + Radius >= right)
             {
                 VelocityX = -VelocityX; // 球反彈
-                X = Width - Radius; // 避免球超出邊界
+                X = right - Radius; // 避免球超出邊界
             }
 
             // TODO: 垂直方向: 檢查球是否碰到牆壁? 下方牆壁==>遊戲結束!
-
+            if (Y - Radius <= top)
+            {
+                VelocityY = -VelocityY;
+                Y = top+Radius;
+            }
+            else if (Y + Radius >= bottom)
+            {
+                // TODO : fail?
+                VelocityY = -VelocityY;
+                Y = bottom - Radius;
+            }
         }
 
         // 檢查碰撞事件 : 球是否與任一磚塊或擋板發生碰撞
@@ -99,5 +114,7 @@ namespace BreakoutGameLab001
                     Y = paddle.Y + paddle.Height + Radius + 1;
             }
         }
+
+
     }
 }
